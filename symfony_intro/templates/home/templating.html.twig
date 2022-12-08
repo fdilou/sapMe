@@ -1,0 +1,154 @@
+
+{# commentaire en twig #}
+{# twing est le moteur de templates de symfony #}
+{# le template hérite du template base.html.twig, c'est un gabarit qui doit impérativement se trouver à la racine du dossier template #}
+
+{% extends 'base.html.twig' %}
+{# surchage du bloc body de base.html.twig ( réécriture complète)  #}
+{% block body %}
+    <h1> Templating avec twig</h1>
+    {%  set maVar='contenu de ma variable' %}
+
+    {# afficher la variable #}
+    <p>{{ maVar  }}</p>
+  {# la concaténation avec ~  #}
+    <p>{{ maVar ~'!!!!'  }}</p>
+    {# structure conditionnelles #}
+
+      {%  if maVar != '' %}
+        <p>maVar est vide</p>
+    {%  endif %}
+    {%  set vrai = true  %}
+    {%  set faux = false %}
+
+    {%  if not faux %}
+        <p>faux n'est pas vrai</p>
+    {%  endif %}
+
+      {# and : if(vrai & !faux) #}
+
+    {# tableau auto-indexé #}
+    {%  set tableau=['a', 'b','c','d'] %}
+
+    {# pour accéder à un élément du tableau #}
+    {{ tableau[2]  }}
+
+    {# ou aussi: #}
+    <br>
+    {{ tableau.2  }}
+
+    {# boucle foreach #}
+    {%  for lettre in tableau %}
+        {{ lettre  }} <br>
+
+
+    {% endfor %}
+    {# tableau associatif  #}
+    {%  set assoc={nom: 'dilou', prenom: 'fabrina', profession: 'développeur web'}  %}
+
+    {# pour lire une entrée du tableau  #}
+    {{ assoc.nom  }}
+
+    {#  ou aussi #}
+    {{ assoc['nom']  }}
+
+    {#  boucle foreach key=> value #}
+    {% for key, value in assoc %}
+        {{ key  }} : {{ value  }} <br>
+    {% endfor %}
+
+   {%  set vide=[] %}
+
+    {# si le tableau est vide il passe dans le else #}
+    {% for element in vide  %}
+        {{ element  }}
+
+    {%  else %}
+        <p> le tableau est vide</p>
+
+    {% endfor %}
+
+    {#  loop existe dans toutes les boucles, il informe sur l'état de la boucle #}
+    {% for value in assoc %}
+        {{ loop.index  }}<br>{# compteur à partir de 1 #}
+        {{ loop.index0  }}<br>{# compteur à partir de 0 #}
+        {%  if loop.first %}
+            <p>premier tour de boucle</p>
+        {%  endif %}
+
+        {%  if loop.last %}
+            <p>dernier tour de boucle</p>
+        {%  endif %}
+
+
+
+        {%  endfor %}
+        {# boucle for de php #}
+        {% for i in 0..10 %}
+            {{ i  }}
+        {% endfor %}
+
+        {# is et is not #}
+
+        {# isset() #}
+        {% if maVar is defined %}
+            <p>maVar existe</p>
+        {%  endif %}
+
+        {# !empty() #}
+
+        {% if maVar is not empty %}
+            <p>maVar n'est pas vide</p>
+        {%  endif %}
+        {%  set dix=10 %}
+
+        {% if dix is divisible by(5) %}
+            <p>dix est divisible par 5</p>
+        {% endif %}
+
+        {% if dix is even %}
+            <p>dix est pair</p>
+        {% endif %}
+
+        {% if dix is odd %}
+            <p>dix est impair</p>
+        {% endif %}
+    
+        {# les filtres avec | (pipe) #}
+
+        {# strToUpper() pour convertir en Majuscule, et lower pour la minuscule #}
+        {{ maVar | upper  }}
+
+        {%  set var='' %}
+    
+        {# contenu par défaut #}
+        {{ var| default ('contenu par défaut') | upper }}
+    
+        <p>{{ '2022-12-07'| date('d/m/Y')  }}</p>
+        <p>{{ demain.format('d/m/Y')  }}</p>
+        {# ou #}
+        <p>{{ demain | date('d/m/Y')  }}</p>
+
+        {%  set paragraphe='<p>Mon paragraphe </p>' %}
+        {{ paragraphe  }} {# c'est une directive d'affichage #}
+        {# permet de l'interpéter (de l'afficher) l'html #}
+        {{ paragraphe|raw }}
+        
+        {# equivalence de require_once ou include #}
+        {#   {%  include'home/index.html.twig' %} #}
+
+        {# var_dump() #}
+        {{ dump(maVar)  }}
+
+
+{% endblock %}
+{% block title %}
+    {# grace à parent  #}
+    {{ parent() }}|templating
+
+
+
+
+
+{% endblock %}
+
